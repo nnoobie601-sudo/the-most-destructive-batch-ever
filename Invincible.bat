@@ -103,9 +103,6 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows Defender\Features" /v TamperProtection 
 sc stop WinDefend
 sc config WinDefend start= disabled
 
-pause
-goto MENU
-
 :: Disable Defender via Group Policy registry keys
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender" /v DisableAntiSpyware /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\UX Configuration" /v UILockdown /t REG_DWORD /d 1 /f
